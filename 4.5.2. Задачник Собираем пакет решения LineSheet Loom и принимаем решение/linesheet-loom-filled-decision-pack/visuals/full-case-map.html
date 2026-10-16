@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Карта решения LineSheet Loom</title>
+<meta name="description" content="Наглядная сводка пакета решения LineSheet Loom: общая карта, проверка качества, экономика, рынок, правила и контроль, три исхода — схемами и диаграммами.">
+<style>
+  :root {
+    --bg: #f6f5f1; --surface: #ffffff; --surface-2: #eeece6; --ink: #1c1e22; --muted: #4f5561; --line: #c9c5bc; --focus: #1a56db;
+    --quality: #0f6e75; --economics: #8a5200; --market: #245b94; --governance: #6b3fa0;
+    --pos: #2f7d4c; --neg: #b03a33; --warn: #9a6400; --own-bg: #dcebfb;
+    --pos-soft: rgba(47,125,76,.12); --neg-soft: rgba(176,58,51,.12);
+    --si: #6f7887;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141619; --surface: #1d2026; --surface-2: #262a33; --ink: #eceae5; --muted: #b0b5be; --line: #454b56; --focus: #8ab4ff;
+      --quality: #5fc9d1; --economics: #f0b55a; --market: #8cbcf2; --governance: #c4a3f0;
+      --pos: #7ccf9a; --neg: #f08a82; --warn: #f0c060; --own-bg: #1d3553;
+      --pos-soft: rgba(124,207,154,.14); --neg-soft: rgba(240,138,130,.14);
+      --si: #a3abb8;
+      color-scheme: dark;
+    }
+  }
+  @media (prefers-contrast: more) { :root { --muted: var(--ink); --line: var(--ink); } }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  a { color: inherit; text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .skip { position: absolute; left: 16px; top: -48px; background: var(--surface); padding: 8px 12px; border: 2px solid var(--focus); border-radius: 6px; }
+  .skip:focus { top: 12px; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 16px 56px; }
+  header h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 8px; }
+  header p { margin: 0 0 6px; color: var(--muted); max-width: 78ch; }
+  .toc { display: flex; flex-wrap: wrap; gap: 6px 8px; margin: 16px 0 6px; padding: 0; list-style: none; }
+  .toc a { display: inline-block; padding: 4px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); text-decoration: none; font-size: .9rem; }
+  .toc a:hover { border-color: var(--ink); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 14px 0 0; padding: 0; list-style: none; font-size: .86rem; color: var(--muted); }
+  .legend li { display: flex; align-items: center; gap: 8px; }
+  .legend svg { width: 42px; height: 20px; flex: none; color: var(--ink); }
+
+  section.block { margin-top: 40px; scroll-margin-top: 12px; }
+  section.block > h2 { font-size: 1.35rem; margin: 0 0 4px; display: flex; align-items: center; gap: 10px; }
+  section.block > h2 .bar { width: 6px; height: 1.2em; border-radius: 3px; background: var(--accent, var(--ink)); }
+  section.block > .lead { margin: 0 0 12px; color: var(--muted); max-width: 80ch; }
+  section.block > .lead a { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .88em; }
+  figure { margin: 0 0 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 14px 12px; }
+  figure h3 { margin: 0 0 8px 4px; font-size: 1rem; }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  figcaption { margin: 8px 4px 0; font-size: .9rem; color: var(--muted); max-width: 90ch; }
+  svg.d { display: block; width: 100%; height: auto; color: var(--ink); }
+  .w-1100 { min-width: 860px; } .w-1000 { min-width: 720px; }
+  .scroll-hint { display: none; font-size: .82rem; color: var(--muted); margin: 6px 4px 0; }
+  @media (max-width: 900px) { .scroll-hint { display: block; } }
+
+  /* svg typography */
+  svg.d text { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; fill: currentColor; }
+  .t { font-size: 13px; } .t-sm { font-size: 12px; } .t-xs { font-size: 11px; } .b { font-weight: 700; }
+  .t-title { font-size: 16px; font-weight: 700; } .t-q { font-size: 15px; font-weight: 600; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .07em; fill: var(--muted) !important; }
+  .muted { fill: var(--muted) !important; }
+  .it { font-style: italic; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+
+  /* svg shapes */
+  .box { fill: var(--surface); stroke: currentColor; stroke-width: 1.5; }
+  .box-soft { fill: var(--surface-2); stroke: none; }
+  .conn { stroke: currentColor; stroke-width: 1.5; fill: none; }
+  .conn.dash { stroke-dasharray: 5 5; }
+  .arrowhead { fill: currentColor; }
+  .grid { stroke: var(--line); stroke-width: 1; }
+  .warp { stroke: currentColor; stroke-width: 1; opacity: .07; }
+  .thread { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke: currentColor; }
+  .pill { fill: var(--surface); stroke: currentColor; stroke-width: 2; }
+  .pill.assume, .box.assume { stroke-dasharray: 6 4; }
+  .pill.unknown, .box.unknown { stroke-dasharray: 1.5 4; stroke-linecap: round; }
+  .own-bg { fill: var(--own-bg); }
+  .fill-accent { fill: currentColor; }
+  .pos { fill: var(--pos); } .neg { fill: var(--neg); } .pos-soft { fill: var(--pos-soft); } .neg-soft { fill: var(--neg-soft); }
+  .bar-si { fill: var(--si); } .bar-ll { fill: var(--economics); }
+  .gate { fill: var(--surface); stroke: var(--governance); stroke-width: 2.5; }
+  .gate-n { fill: var(--governance) !important; font-weight: 700; font-size: 13px; }
+  .boundary { stroke: var(--governance); stroke-width: 2; stroke-dasharray: 8 6; }
+  .cat-ok { fill: var(--pos-soft); stroke: var(--pos); stroke-width: 1.5; }
+  .cat-lim { fill: var(--surface); stroke: var(--warn); stroke-width: 1.5; }
+  .cat-no { fill: var(--neg-soft); stroke: var(--neg); stroke-width: 1.5; }
+  .cat-sep { fill: var(--surface); stroke: currentColor; stroke-width: 1.5; stroke-dasharray: 6 4; }
+  .stroke-neg { stroke: var(--neg); stroke-width: 3; stroke-linecap: round; }
+
+  .c-quality { color: var(--quality); --accent: var(--quality); } .c-economics { color: var(--economics); --accent: var(--economics); }
+  .c-market { color: var(--market); --accent: var(--market); } .c-governance { color: var(--governance); --accent: var(--governance); }
+  section.block.c-quality, section.block.c-economics, section.block.c-market, section.block.c-governance { color: var(--ink); }
+  svg.d .ink text, svg.d text.ink { fill: var(--ink); }
+  .w-q { fill: var(--quality); } .w-e { fill: var(--economics); } .w-m { fill: var(--market); } .w-g { fill: var(--governance); } .w-warp { fill: var(--line); }
+
+  .files { display: flex; flex-wrap: wrap; gap: 8px; margin: 32px 0 0; padding: 0; list-style: none; }
+  .files a { display: inline-flex; gap: 8px; align-items: baseline; padding: 5px 12px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); text-decoration: none; font-size: .88rem; }
+  .files a:hover { border-color: var(--ink); }
+  .files .f { color: var(--muted); font-size: .8rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .text-version { margin-top: 28px; }
+  .text-version details { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+  .text-version summary { cursor: pointer; font-weight: 600; }
+  .text-version h3 { font-size: 1rem; margin: 14px 0 4px; }
+  .text-version ul { margin: 4px 0; padding-left: 20px; }
+  footer { margin-top: 24px; font-size: .86rem; color: var(--muted); }
+  @media (forced-colors: active) { .thread, .pill, .conn, .box { stroke: CanvasText; } }
+  @media print { .skip, .scroll-hint, .toc { display: none; } svg.d { min-width: 0 !important; } figure { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<a class="skip" href="#text-version">Перейти к текстовой версии</a>
+<div class="wrap">
+  <header>
+    <h1>Карта решения LineSheet Loom</h1>
+    <p>Наглядная сводка пакета решения: как устроены четыре группы доказательств и как они сходятся в одно решение. Здесь только материалы курса из файлов <code>00</code>–<code>05</code>. Выводы и итог — ваши, в <code>decision-summary.md</code>.</p>
+    <ul class="toc" aria-label="Разделы">
+      <li><a href="#overview">1. Общая карта</a></li>
+      <li><a href="#quality">2. Качество</a></li>
+      <li><a href="#economics">3. Экономика</a></li>
+      <li><a href="#market">4. Рынок</a></li>
+      <li><a href="#governance">5. Правила и контроль</a></li>
+      <li><a href="#decision">6. Решение</a></li>
+    </ul>
+    <ul class="legend" aria-label="Обозначения">
+      <li><svg viewBox="0 0 42 20" aria-hidden="true"><rect x="2" y="2" width="38" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>материал курса — факт или расчёт</li>
+      <li><svg viewBox="0 0 42 20" aria-hidden="true"><rect x="2" y="2" width="38" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="6 4"/></svg>учебное предположение или гипотеза</li>
+      <li><svg viewBox="0 0 42 20" aria-hidden="true"><rect x="2" y="2" width="38" height="16" rx="8" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="1.5 4" stroke-linecap="round"/></svg>неизвестное — утверждать нельзя</li>
+      <li><svg viewBox="0 0 42 20" aria-hidden="true"><rect x="2" y="2" width="38" height="16" rx="4" fill="var(--own-bg)"/></svg>ваш документ из задачника, если он есть</li>
+    </ul>
+  </header>
+
+  <!-- ===================== 1. OVERVIEW ===================== -->
+  <section class="block" id="overview" aria-labelledby="h-overview">
+    <h2 id="h-overview"><span class="bar"></span>1. Общая карта</h2>
+    <p class="lead">Каждая нить — группа доказательств. Бусины на нити — что по ней известно. Все нити сходятся в решение, решение отвечает на вопрос кейса и оставляет открытым то, что нужно проверить дальше.</p>
+    <figure>
+      <div class="scroll">
+        <svg class="d w-1100" viewBox="0 0 1200 750" role="img" aria-labelledby="ov-t ov-d">
+          <title id="ov-t">Общая карта решения</title>
+          <desc id="ov-d">Четыре нити доказательств идут от файлов пакета и сходятся в полотно «Решение». Качество: 7 из 8, порог достигнут. Экономика: эффект плюс 27 480,61 доллара при 3,2 минуты проверки, около нуля при 3,96, минус 19 319,39 при 4,5. Рынок: сегмент — гипотеза, боль и готовность платить неизвестны. Правила и контроль: предварительно умеренный риск, семь ролей, четыре категории данных. Решение отвечает на вопрос и ведёт к следующей проверке.</desc>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker>
+            <pattern id="weave" width="32" height="32" patternUnits="userSpaceOnUse">
+              <rect class="w-q" x="0" y="2" width="32" height="4"/><rect class="w-e" x="0" y="10" width="32" height="4"/>
+              <rect class="w-m" x="0" y="18" width="32" height="4"/><rect class="w-g" x="0" y="26" width="32" height="4"/>
+              <rect class="w-warp" x="2" y="0" width="4" height="32"/><rect class="w-warp" x="10" y="0" width="4" height="32"/>
+              <rect class="w-warp" x="18" y="0" width="4" height="32"/><rect class="w-warp" x="26" y="0" width="4" height="32"/>
+              <rect class="w-q" x="2" y="2" width="4" height="4"/><rect class="w-q" x="18" y="2" width="4" height="4"/>
+              <rect class="w-e" x="10" y="10" width="4" height="4"/><rect class="w-e" x="26" y="10" width="4" height="4"/>
+              <rect class="w-m" x="2" y="18" width="4" height="4"/><rect class="w-m" x="18" y="18" width="4" height="4"/>
+              <rect class="w-g" x="10" y="26" width="4" height="4"/><rect class="w-g" x="26" y="26" width="4" height="4"/>
+            </pattern>
+            <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect x="0" y="0" width="2" height="5" fill="currentColor"/></pattern>
+          </defs>
+          <g aria-hidden="true">
+            <line class="warp" x1="290" y1="112" x2="290" y2="660"/><line class="warp" x1="324" y1="112" x2="324" y2="660"/><line class="warp" x1="358" y1="112" x2="358" y2="660"/><line class="warp" x1="392" y1="112" x2="392" y2="660"/>
+            <line class="warp" x1="426" y1="112" x2="426" y2="660"/><line class="warp" x1="460" y1="112" x2="460" y2="660"/><line class="warp" x1="494" y1="112" x2="494" y2="660"/><line class="warp" x1="528" y1="112" x2="528" y2="660"/>
+            <line class="warp" x1="562" y1="112" x2="562" y2="660"/><line class="warp" x1="596" y1="112" x2="596" y2="660"/><line class="warp" x1="630" y1="112" x2="630" y2="660"/><line class="warp" x1="664" y1="112" x2="664" y2="660"/>
+            <line class="warp" x1="698" y1="112" x2="698" y2="660"/><line class="warp" x1="732" y1="112" x2="732" y2="660"/><line class="warp" x1="766" y1="112" x2="766" y2="660"/><line class="warp" x1="800" y1="112" x2="800" y2="660"/>
+          </g>
+          <rect class="box-soft" x="40" y="20" width="1120" height="86" rx="12"/>
+          <text class="eyebrow" x="64" y="46">ВОПРОС РЕШЕНИЯ · 00-case-brief.md · 01-decision-evidence-contract.md</text>
+          <text class="t-q" x="64" y="70">Даёт ли LineSheet Loom достаточное преимущество на неоднородном «длинном хвосте» поставщиков</text>
+          <text class="t-q" x="64" y="92">относительно Structured Intake, чтобы запускать ограниченный внутренний пилот?</text>
+          <text class="eyebrow" x="40" y="140">ОТКУДА НИТЬ</text>
+          <text class="eyebrow" x="300" y="140">ЧТО УЖЕ ИЗВЕСТНО И ЧЕГО НЕТ</text>
+
+          <g class="c-quality">
+            <path class="thread" d="M270 200H805C845 200 845 250 885 250"/>
+            <rect class="box" x="40" y="156" width="230" height="88" rx="10" style="stroke:currentColor"/>
+            <rect class="fill-accent" x="40" y="156" width="8" height="88" rx="4"/>
+            <text class="t-title" x="64" y="192">Качество</text>
+            <text class="mono ink" x="64" y="216">02-quality-evidence.md</text>
+            <text class="t-xs muted" x="64" y="234">материал курса</text>
+            <text class="t-sm muted" x="300" y="174">закрытая выборка: 7 из 8 · формат 8 из 8 · 0 критических</text>
+            <rect class="fill-accent" x="300" y="191" width="18" height="18" rx="3"/><rect class="fill-accent" x="322" y="191" width="18" height="18" rx="3"/>
+            <rect class="fill-accent" x="344" y="191" width="18" height="18" rx="3"/><rect class="fill-accent" x="366" y="191" width="18" height="18" rx="3"/>
+            <rect class="fill-accent" x="388" y="191" width="18" height="18" rx="3"/>
+            <rect x="410" y="191" width="18" height="18" rx="3" fill="url(#hatch)" stroke="currentColor" stroke-width="1.5"/>
+            <rect class="fill-accent" x="432" y="191" width="18" height="18" rx="3"/><rect class="fill-accent" x="454" y="191" width="18" height="18" rx="3"/>
+            <rect class="pill" x="486" y="185" width="140" height="30" rx="15"/><text class="t ink" x="556" y="205" text-anchor="middle">порог достигнут</text>
+            <rect class="pill" x="638" y="185" width="166" height="30" rx="15"/><text class="t ink" x="721" y="205" text-anchor="middle">не решение о пилоте</text>
+            <text class="t-sm muted it" x="300" y="246">ваш вопрос: как результат и его границы влияют на решение?</text>
+          </g>
+
+          <g class="c-economics">
+            <path class="thread" d="M270 330H805C845 330 845 320 885 320"/>
+            <rect class="box" x="40" y="286" width="230" height="88" rx="10" style="stroke:currentColor"/>
+            <rect class="fill-accent" x="40" y="286" width="8" height="88" rx="4"/>
+            <text class="t-title" x="64" y="316">Экономика</text>
+            <rect class="own-bg" x="60" y="327" width="194" height="20" rx="4"/>
+            <text class="mono ink" x="66" y="341">ваш economics-analysis.md</text>
+            <text class="mono muted" x="64" y="364">или 03-economics-…</text>
+            <rect class="pill" x="300" y="315" width="252" height="30" rx="15"/><text class="t ink" x="426" y="335" text-anchor="middle">эффект +$27 480,61 · ROI 7,81%</text>
+            <rect class="box assume" x="566" y="286" width="236" height="80" rx="8" style="stroke:currentColor;fill:var(--surface)"/>
+            <text class="t-xs muted" x="578" y="301">время проверки, мин — предположение</text>
+            <rect class="pos" x="580" y="326" width="116" height="8"/><rect class="neg" x="696" y="326" width="90" height="8"/>
+            <g class="ink"><line class="conn" x1="604" y1="321" x2="604" y2="339" style="stroke:var(--ink)"/><line class="conn" x1="696" y1="319" x2="696" y2="341" style="stroke:var(--ink)"/><line class="conn" x1="761" y1="321" x2="761" y2="339" style="stroke:var(--ink)"/>
+            <text class="t-sm b" x="604" y="317" text-anchor="middle">3,2</text><text class="t-sm b" x="696" y="317" text-anchor="middle">3,96</text><text class="t-sm b" x="761" y="317" text-anchor="middle">4,5</text>
+            <text class="t-xs" x="604" y="355" text-anchor="middle">+$27 480,61</text><text class="t-xs" x="696" y="355" text-anchor="middle">≈ $0</text><text class="t-xs" x="761" y="355" text-anchor="middle">−$19 319,39</text></g>
+            <text class="t-sm muted it" x="300" y="380">ваш вопрос: насколько вывод устойчив к времени проверки?</text>
+          </g>
+
+          <g class="c-market">
+            <path class="thread" d="M270 460H805C845 460 845 390 885 390"/>
+            <rect class="box" x="40" y="416" width="230" height="88" rx="10" style="stroke:currentColor"/>
+            <rect class="fill-accent" x="40" y="416" width="8" height="88" rx="4"/>
+            <text class="t-title" x="64" y="446">Рынок</text>
+            <rect class="own-bg" x="60" y="457" width="138" height="20" rx="4"/>
+            <text class="mono ink" x="66" y="471">ваш market-gtm.md</text>
+            <text class="mono muted" x="64" y="494">или 04-market-gtm-…</text>
+            <rect class="pill assume" x="300" y="445" width="165" height="30" rx="15"/><text class="t ink" x="382" y="465" text-anchor="middle">сегмент — гипотеза</text>
+            <rect class="pill unknown" x="478" y="445" width="140" height="30" rx="15"/><text class="t ink" x="548" y="465" text-anchor="middle">? есть ли боль</text>
+            <rect class="pill unknown" x="631" y="445" width="172" height="30" rx="15"/><text class="t ink" x="717" y="465" text-anchor="middle">? готовы ли платить</text>
+            <text class="t-sm muted it" x="300" y="506">ваш вопрос: какие рыночные тезисы подтверждены источниками?</text>
+          </g>
+
+          <g class="c-governance">
+            <path class="thread" d="M270 590H805C845 590 845 460 885 460"/>
+            <rect class="box" x="40" y="546" width="230" height="88" rx="10" style="stroke:currentColor"/>
+            <rect class="fill-accent" x="40" y="546" width="8" height="88" rx="4"/>
+            <text class="t-title" x="64" y="580">Правила и контроль</text>
+            <text class="mono ink" x="64" y="604">05-governance-inputs.md</text>
+            <text class="t-xs muted" x="64" y="622">материал курса</text>
+            <rect class="pill assume" x="300" y="575" width="250" height="30" rx="15"/><text class="t ink" x="425" y="595" text-anchor="middle">предварительно: умеренный риск</text>
+            <rect class="pill" x="563" y="575" width="240" height="30" rx="15"/><text class="t ink" x="683" y="595" text-anchor="middle">7 ролей · 4 категории данных</text>
+            <text class="t-sm muted it" x="300" y="636">ваш вопрос: итоговый уровень риска и кто что решает?</text>
+          </g>
+
+          <rect x="865" y="160" width="295" height="360" rx="12" fill="url(#weave)" stroke="currentColor" stroke-width="1.5"/>
+          <rect class="box" x="885" y="180" width="255" height="320" rx="10" style="stroke-width:2"/>
+          <text class="eyebrow" x="905" y="206">РЕШЕНИЕ</text>
+          <text class="mono" x="905" y="226">decision-summary.md</text>
+          <rect class="box-soft" x="905" y="240" width="215" height="52" rx="8"/><text class="t b" x="917" y="262">продолжаем</text><text class="t-sm muted" x="917" y="281">ограниченный внутренний пилот</text>
+          <rect class="box-soft" x="905" y="302" width="215" height="52" rx="8"/><text class="t b" x="917" y="324">пересматриваем</text><text class="t-sm muted" x="917" y="343">сузить сценарий LineSheet Loom</text>
+          <rect class="box-soft" x="905" y="364" width="215" height="52" rx="8"/><text class="t b" x="917" y="386">останавливаем</text><text class="t-sm muted" x="917" y="405">остаёмся на Structured Intake</text>
+          <text class="t-sm muted" x="905" y="446">три исхода равноправны —</text><text class="t-sm muted" x="905" y="464">итог выбираете вы</text>
+          <path class="conn dash" d="M1012 160V112" marker-end="url(#arrow)"/><text class="t-sm muted" x="1024" y="142">отвечает на вопрос</text>
+          <path class="conn" d="M1012 520V584" marker-end="url(#arrow)"/><text class="t-sm muted" x="1024" y="556">оставляет открытым</text>
+          <rect class="box" x="865" y="590" width="295" height="140" rx="10"/>
+          <text class="eyebrow" x="885" y="616">СЛЕДУЮЩАЯ ПРОВЕРКА</text>
+          <text class="t" x="885" y="642">· самое слабое допущение</text><text class="t" x="885" y="664">· каким наблюдением его проверить</text>
+          <text class="t" x="885" y="686">· кто отвечает, какой критерий</text><text class="t" x="885" y="708">· что изменит решение</text>
+        </svg>
+      </div>
+      <p class="scroll-hint">Схема шире экрана — прокрутите её вбок.</p>
+      <figcaption>Четыре нити сходятся в одно решение. Ни одна нить сама по себе исход не определяет: хорошее качество не отменяет слабую экономику, а выгодная экономика не разрешает недопустимые данные.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 2. QUALITY ===================== -->
+  <section class="block c-quality" id="quality" aria-labelledby="h-quality">
+    <h2 id="h-quality"><span class="bar"></span>2. Качество: как шла проверка</h2>
+    <p class="lead">Материал курса — <a href="../02-quality-evidence.md">02-quality-evidence.md</a>. Порог задан заранее: не меньше 7 из 8 в закрытой выборке, формат 8 из 8, ноль критических ошибок.</p>
+    <figure>
+      <div class="scroll">
+        <svg class="d w-1100" viewBox="0 0 1100 300" role="img" aria-labelledby="q-t q-d">
+          <title id="q-t">Путь проверки качества</title>
+          <desc id="q-d">Быстрые проверки: 2 из 2. Открытая выборка до изменения: 1 из 4, одна критическая ошибка в D4. После одного изменения правил: 4 из 4. Закрытая выборка без настройки: 7 из 8, H6 не пройден некритично, порог достигнут.</desc>
+          <defs>
+            <marker id="arrow-q" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker>
+            <pattern id="hatch-q" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect x="0" y="0" width="2.5" height="6" fill="var(--quality)"/></pattern>
+          </defs>
+          <g class="c-quality">
+            <!-- A: smoke -->
+            <text class="eyebrow" x="30" y="36">БЫСТРЫЕ ПРОВЕРКИ</text>
+            <rect class="fill-accent" x="30" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="72" y="56" width="34" height="34" rx="5"/>
+            <text class="t-xs ink" x="47" y="108" text-anchor="middle">S1</text><text class="t-xs ink" x="89" y="108" text-anchor="middle">S2</text>
+            <text class="t b ink" x="30" y="138">2 из 2</text>
+            <text class="t-sm muted" x="30" y="160">базовая механика</text><text class="t-sm muted" x="30" y="176">не сломана</text>
+
+            <!-- B: dev before -->
+            <text class="eyebrow" x="190" y="36">ОТКРЫТАЯ ВЫБОРКА</text>
+            <rect class="fill-accent" x="190" y="56" width="34" height="34" rx="5"/>
+            <rect x="232" y="56" width="34" height="34" rx="5" fill="url(#hatch-q)" stroke="var(--quality)" stroke-width="1.5"/>
+            <rect x="274" y="56" width="34" height="34" rx="5" fill="url(#hatch-q)" stroke="var(--quality)" stroke-width="1.5"/>
+            <rect class="neg" x="316" y="56" width="34" height="34" rx="5"/>
+            <path d="M324 64L342 82M342 64L324 82" stroke="var(--surface)" stroke-width="3.5" stroke-linecap="round"/>
+            <text class="t-xs ink" x="207" y="108" text-anchor="middle">D1</text><text class="t-xs ink" x="249" y="108" text-anchor="middle">D2</text>
+            <text class="t-xs ink" x="291" y="108" text-anchor="middle">D3</text><text class="t-xs ink" x="333" y="108" text-anchor="middle">D4</text>
+            <text class="t b ink" x="190" y="138">1 из 4 · 1 критическая</text>
+            <text class="t-sm muted" x="190" y="160">D2: угадала цену за коробку</text>
+            <text class="t-sm muted" x="190" y="178">D3: выбрала $20 при противоречии</text>
+            <text class="t-sm muted" x="190" y="196">D4: реквизиты в комментарии</text>
+
+            <!-- arrow B->C -->
+            <path class="conn" d="M362 73H452" marker-end="url(#arrow-q)" style="stroke:var(--ink)"/>
+            <text class="t-sm b ink" x="407" y="60" text-anchor="middle">одно изменение</text>
+            <text class="t-sm b ink" x="407" y="100" text-anchor="middle">правил</text>
+
+            <!-- C: dev after -->
+            <text class="eyebrow" x="470" y="36">ПОСЛЕ ИЗМЕНЕНИЯ</text>
+            <rect class="fill-accent" x="470" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="512" y="56" width="34" height="34" rx="5"/>
+            <rect class="fill-accent" x="554" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="596" y="56" width="34" height="34" rx="5"/>
+            <text class="t-xs ink" x="487" y="108" text-anchor="middle">D1</text><text class="t-xs ink" x="529" y="108" text-anchor="middle">D2</text>
+            <text class="t-xs ink" x="571" y="108" text-anchor="middle">D3</text><text class="t-xs ink" x="613" y="108" text-anchor="middle">D4</text>
+            <text class="t b ink" x="470" y="138">4 из 4 · 0 критических</text>
+            <text class="t-sm muted" x="470" y="160">те же кейсы —</text><text class="t-sm muted" x="470" y="176">не независимая оценка</text>
+
+            <!-- arrow C->D -->
+            <path class="conn" d="M642 73H732" marker-end="url(#arrow-q)" style="stroke:var(--ink)"/>
+            <text class="t-sm b ink" x="687" y="60" text-anchor="middle">новые кейсы</text>
+            <text class="t-sm b ink" x="687" y="100" text-anchor="middle">без настройки</text>
+
+            <!-- D: holdout -->
+            <text class="eyebrow" x="750" y="36">ЗАКРЫТАЯ ВЫБОРКА</text>
+            <rect class="fill-accent" x="750" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="792" y="56" width="34" height="34" rx="5"/>
+            <rect class="fill-accent" x="834" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="876" y="56" width="34" height="34" rx="5"/>
+            <rect class="fill-accent" x="918" y="56" width="34" height="34" rx="5"/>
+            <rect x="960" y="56" width="34" height="34" rx="5" fill="url(#hatch-q)" stroke="var(--quality)" stroke-width="1.5"/>
+            <rect class="fill-accent" x="1002" y="56" width="34" height="34" rx="5"/><rect class="fill-accent" x="1044" y="56" width="34" height="34" rx="5"/>
+            <text class="t-xs ink" x="767" y="108" text-anchor="middle">H1</text><text class="t-xs ink" x="809" y="108" text-anchor="middle">H2</text>
+            <text class="t-xs ink" x="851" y="108" text-anchor="middle">H3</text><text class="t-xs ink" x="893" y="108" text-anchor="middle">H4</text>
+            <text class="t-xs ink" x="935" y="108" text-anchor="middle">H5</text><text class="t-xs ink" x="977" y="108" text-anchor="middle">H6</text>
+            <text class="t-xs ink" x="1019" y="108" text-anchor="middle">H7</text><text class="t-xs ink" x="1061" y="108" text-anchor="middle">H8</text>
+            <text class="t b ink" x="750" y="138">7 из 8 · формат 8 из 8 · 0 критических</text>
+            <text class="t-sm muted" x="750" y="160">H6: выбрала категорию вместо вопроса</text>
+            <rect class="pill" x="750" y="176" width="328" height="32" rx="16"/>
+            <text class="t b ink" x="914" y="197" text-anchor="middle">порог: не меньше 7 из 8 → достигнут</text>
+
+            <!-- legend -->
+            <line class="grid" x1="30" y1="236" x2="1078" y2="236"/>
+            <rect class="fill-accent" x="30" y="254" width="18" height="18" rx="3"/><text class="t-sm ink" x="56" y="268">пройден</text>
+            <rect x="140" y="254" width="18" height="18" rx="3" fill="url(#hatch-q)" stroke="var(--quality)" stroke-width="1.5"/><text class="t-sm ink" x="166" y="268">не пройден, некритично</text>
+            <rect class="neg" x="340" y="254" width="18" height="18" rx="3"/><path d="M344 258L354 268M354 258L344 268" stroke="var(--surface)" stroke-width="2.5" stroke-linecap="round"/><text class="t-sm ink" x="366" y="268">критическая ошибка</text>
+          </g>
+        </svg>
+      </div>
+      <p class="scroll-hint">Схема шире экрана — прокрутите её вбок.</p>
+      <figcaption>Настройку делали только на открытой выборке. Закрытая выборка в настройке не участвовала — поэтому только она отвечает, достигнут ли порог. Результат не доказывает готовность к работе, не сравнивает со Structured Intake и не выбирает исход.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 3. ECONOMICS ===================== -->
+  <section class="block c-economics" id="economics" aria-labelledby="h-econ">
+    <h2 id="h-econ"><span class="bar"></span>3. Экономика: за что платит каждый вариант</h2>
+    <p class="lead">Ваш <code>economics-analysis.md</code> или справочный расчёт курса — <a href="../03-economics-course-reference.md">03-economics-course-reference.md</a>. Горизонт — 12 месяцев, объём — 60 000 строк для обоих вариантов.</p>
+
+    <figure>
+      <h3>Статьи затрат за 12 месяцев</h3>
+      <div class="scroll">
+        <svg class="d w-1000" viewBox="0 0 1000 400" role="img" aria-labelledby="e1-t e1-d">
+          <title id="e1-t">Сравнение статей затрат</title>
+          <desc id="e1-d">Постоянные затраты: Structured Intake 85 000, LineSheet Loom 180 000. Ручная проверка: 198 000 против 115 200. Уточнения у поставщика: 64 800 против 28 800. Переделка: 17 280 против 8 640. Контрольная проверка: 14 400 против 19 200. Модель: только у LineSheet Loom, 159,39. Итого TCO: 379 480 против 351 999,39.</desc>
+          <!-- grid: $0..$200k = 280..680 -->
+          <g>
+            <line class="grid" x1="280" y1="36" x2="280" y2="336"/><line class="grid" x1="380" y1="36" x2="380" y2="336"/>
+            <line class="grid" x1="480" y1="36" x2="480" y2="336"/><line class="grid" x1="580" y1="36" x2="580" y2="336"/>
+            <line class="grid" x1="680" y1="36" x2="680" y2="336"/>
+            <text class="t-xs muted" x="280" y="28" text-anchor="middle">$0</text><text class="t-xs muted" x="380" y="28" text-anchor="middle">$50 000</text>
+            <text class="t-xs muted" x="480" y="28" text-anchor="middle">$100 000</text><text class="t-xs muted" x="580" y="28" text-anchor="middle">$150 000</text>
+            <text class="t-xs muted" x="680" y="28" text-anchor="middle">$200 000</text>
+          </g>
+          <!-- legend -->
+          <rect class="bar-si" x="790" y="40" width="16" height="12" rx="2"/><text class="t-sm" x="814" y="51">Structured Intake</text>
+          <rect class="bar-ll" x="790" y="62" width="16" height="12" rx="2"/><text class="t-sm" x="814" y="73">LineSheet Loom</text>
+
+          <!-- rows -->
+          <text class="t b" x="20" y="64">Постоянные затраты</text>
+          <rect class="bar-si" x="280" y="46" width="170" height="13"/><text class="t-sm" x="456" y="57">$85 000</text>
+          <rect class="bar-ll" x="280" y="62" width="360" height="13"/><text class="t-sm" x="646" y="73">$180 000</text>
+
+          <text class="t b" x="20" y="116">Ручная проверка</text>
+          <rect class="bar-si" x="280" y="98" width="396" height="13"/><text class="t-sm" x="682" y="109">$198 000</text>
+          <rect class="bar-ll" x="280" y="114" width="230.4" height="13"/><text class="t-sm" x="516" y="125">$115 200</text>
+
+          <text class="t b" x="20" y="168">Уточнения у поставщика</text>
+          <rect class="bar-si" x="280" y="150" width="129.6" height="13"/><text class="t-sm" x="416" y="161">$64 800</text>
+          <rect class="bar-ll" x="280" y="166" width="57.6" height="13"/><text class="t-sm" x="344" y="177">$28 800</text>
+
+          <text class="t b" x="20" y="220">Переделка</text>
+          <rect class="bar-si" x="280" y="202" width="34.56" height="13"/><text class="t-sm" x="321" y="213">$17 280</text>
+          <rect class="bar-ll" x="280" y="218" width="17.28" height="13"/><text class="t-sm" x="304" y="229">$8 640</text>
+
+          <text class="t b" x="20" y="272">Контрольная проверка</text>
+          <rect class="bar-si" x="280" y="254" width="28.8" height="13"/><text class="t-sm" x="315" y="265">$14 400</text>
+          <rect class="bar-ll" x="280" y="270" width="38.4" height="13"/><text class="t-sm" x="325" y="281">$19 200</text>
+
+          <text class="t b" x="20" y="324">Модель (токены)</text>
+          <text class="t-sm muted" x="286" y="317">— нет</text>
+          <rect class="bar-ll" x="280" y="322" width="2" height="13"/><text class="t-sm" x="288" y="333">$159,39 — меньше 0,05% от TCO</text>
+
+          <line class="conn" x1="20" y1="352" x2="980" y2="352" style="stroke:var(--line)"/>
+          <text class="t b" x="20" y="382">TCO за 12 месяцев</text>
+          <rect class="bar-si" x="280" y="370" width="12" height="12" rx="2"/><text class="t b" x="300" y="381">$379 480</text>
+          <rect class="bar-ll" x="440" y="370" width="12" height="12" rx="2"/><text class="t b" x="460" y="381">$351 999,39</text>
+          <text class="t" x="620" y="381">разница — $27 480,61 в пользу LineSheet Loom</text>
+        </svg>
+      </div>
+      <p class="scroll-hint">Диаграмма шире экрана — прокрутите её вбок.</p>
+      <figcaption>LineSheet Loom обходится дороже в постоянных затратах — $180 000 против $85 000, — но экономит на ручной проверке и уточнениях у поставщика. Стоимость модели почти не влияет на итог: всё решает время, которое люди тратят на проверку.</figcaption>
+    </figure>
+
+    <figure>
+      <h3>Чистый эффект в зависимости от времени ручной проверки</h3>
+      <div class="scroll">
+        <svg class="d w-1000" viewBox="0 0 1000 390" role="img" aria-labelledby="e2-t e2-d">
+          <title id="e2-t">Чувствительность к времени ручной проверки</title>
+          <desc id="e2-d">Чем дольше проверка строки черновика, тем меньше выгода LineSheet Loom. При 3,2 минуты эффект плюс 27 480,61 доллара, при 3,96 минуты — около нуля, при 4,5 минуты — минус 19 319,39. Каждая минута проверки на всём объёме стоит 36 000 долларов.</desc>
+          <!-- plot area x 90..940 (t 3.0..4.7), y 40..320 (+40k..-30k) -->
+          <polygon class="pos-soft" points="90,200 90,61.3 571.6,200"/>
+          <polygon class="neg-soft" points="571.6,200 940,306.1 940,200"/>
+          <line class="grid" x1="90" y1="40" x2="940" y2="40"/><line class="grid" x1="90" y1="120" x2="940" y2="120"/>
+          <line class="grid" x1="90" y1="280" x2="940" y2="280"/>
+          <line class="conn" x1="90" y1="200" x2="940" y2="200"/>
+          <line class="grid" x1="340" y1="40" x2="340" y2="320"/><line class="grid" x1="590" y1="40" x2="590" y2="320"/><line class="grid" x1="840" y1="40" x2="840" y2="320"/>
+          <line class="conn" x1="90" y1="40" x2="90" y2="320"/>
+          <text class="t-xs muted" x="82" y="44" text-anchor="end">+$40 000</text><text class="t-xs muted" x="82" y="124" text-anchor="end">+$20 000</text>
+          <text class="t-xs muted" x="82" y="204" text-anchor="end">$0</text><text class="t-xs muted" x="82" y="284" text-anchor="end">−$20 000</text>
+          <text class="t-xs muted" x="90" y="338" text-anchor="middle">3,0</text><text class="t-xs muted" x="340" y="338" text-anchor="middle">3,5</text>
+          <text class="t-xs muted" x="590" y="338" text-anchor="middle">4,0</text><text class="t-xs muted" x="840" y="338" text-anchor="middle">4,5</text>
+          <text class="t-sm muted" x="515" y="366" text-anchor="middle">время ручной проверки одной строки в LineSheet Loom, мин</text>
+          <text class="t-sm muted" x="26" y="180" transform="rotate(-90 26 180)" text-anchor="middle">чистый эффект, $</text>
+
+          <text class="t-sm" x="204" y="190" style="fill:var(--pos)">LineSheet Loom дешевле</text>
+          <text class="t-sm" x="930" y="222" text-anchor="end" style="fill:var(--neg)">Structured Intake дешевле</text>
+
+          <line x1="90" y1="61.3" x2="940" y2="306.1" stroke="var(--economics)" stroke-width="3.5" stroke-linecap="round"/>
+
+          <line class="conn dash" x1="190" y1="90.1" x2="190" y2="320" style="stroke:var(--economics)"/>
+          <circle cx="190" cy="90.1" r="7" fill="var(--surface)" stroke="var(--economics)" stroke-width="3"/>
+          <text class="t-sm b" x="202" y="72">3,2 мин: +$27 480,61, ROI 7,81%</text>
+          <text class="t-xs muted" x="202" y="88">базовое учебное предположение — не измерено</text>
+
+          <circle cx="571.6" cy="200" r="7" fill="var(--surface)" stroke="var(--ink)" stroke-width="3"/>
+          <text class="t-sm b" x="582" y="186">3,96 мин — точка безубыточности</text>
+
+          <circle cx="840" cy="277.3" r="7" fill="var(--surface)" stroke="var(--neg)" stroke-width="3"/>
+          <text class="t-sm b" x="856" y="238">4,5 мин:</text><text class="t-sm b" x="856" y="254">−$19 319,39</text><text class="t-sm b" x="856" y="270">ROI −4,84%</text>
+        </svg>
+      </div>
+      <p class="scroll-hint">График шире экрана — прокрутите его вбок.</p>
+      <figcaption>Каждая лишняя минута проверки на 60 000 строк стоит $36 000. Запас между базовым предположением (3,2 мин) и точкой безубыточности (3,96 мин) — меньше минуты на строку. При этом время 3,2 мин — учебное предположение: его никто не измерял.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 4. MARKET ===================== -->
+  <section class="block c-market" id="market" aria-labelledby="h-market">
+    <h2 id="h-market"><span class="bar"></span>4. Рынок: что доказано, а что нет</h2>
+    <p class="lead">Ваш <code>market-gtm.md</code> или рыночный контекст курса — <a href="../04-market-gtm-recovery-context.md">04-market-gtm-recovery-context.md</a>. Контекст курса — не исследование: рыночные тезисы в нём — гипотезы и неизвестные.</p>
+    <figure>
+      <div class="scroll">
+        <svg class="d w-1100" viewBox="0 0 1100 420" role="img" aria-labelledby="m-t m-d">
+          <title id="m-t">Что доказано о рынке</title>
+          <desc id="m-d">Факты кейса Juniper and Row не доказывают рыночный спрос. О рынке известно: сегмент — гипотеза; есть ли боль, готов ли сегмент платить и какие альтернативы он использует — неизвестно. Разбор отчётов из 4.4.2: цифра 62 процента удалена как неподтверждённая; 70 процентов — слова продавца об одном клиенте; вывод отчёта B верен только для крупных компаний.</desc>
+          <defs><marker id="arrow-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+          <g class="c-market">
+            <rect class="box" x="20" y="30" width="330" height="170" rx="10" style="stroke:var(--line)"/>
+            <text class="eyebrow" x="40" y="56">ФАКТЫ КЕЙСА JUNIPER &amp; ROW</text>
+            <text class="t ink" x="40" y="84">· 420 поставщиков, 60 000 строк в год</text>
+            <text class="t ink" x="40" y="108">· 9,5 мин на строку вручную</text>
+            <text class="t ink" x="40" y="132">· проверка качества: 7 из 8</text>
+            <text class="t ink" x="40" y="156">· TCO и ROI из расчёта</text>
+            <text class="t-xs muted" x="40" y="184">синтетическая легенда одной компании</text>
+
+            <path class="conn dash" d="M358 115H462" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <circle cx="410" cy="115" r="13" fill="var(--surface)" stroke="var(--neg)" stroke-width="2.5"/>
+            <path d="M404 109L416 121M416 109L404 121" class="stroke-neg"/>
+            <text class="t-sm b ink" x="410" y="150" text-anchor="middle">не доказывают</text>
+            <text class="t-sm b ink" x="410" y="166" text-anchor="middle">спрос</text>
+
+            <rect class="box" x="470" y="30" width="610" height="170" rx="10" style="stroke:var(--line)"/>
+            <text class="eyebrow" x="490" y="56">РЫНОК СЕГМЕНТА</text>
+            <rect class="box assume" x="490" y="68" width="570" height="46" rx="10" style="stroke:currentColor"/>
+            <text class="t b ink" x="506" y="87">сегмент — гипотеза:</text>
+            <text class="t ink" x="506" y="105">США · оптовые маркетплейсы и компании · 200–1 000 поставщиков · от 50 000 строк в год</text>
+            <rect class="pill unknown" x="490" y="126" width="180" height="30" rx="15"/><text class="t ink" x="580" y="146" text-anchor="middle">? есть ли боль</text>
+            <rect class="pill unknown" x="684" y="126" width="180" height="30" rx="15"/><text class="t ink" x="774" y="146" text-anchor="middle">? готов ли платить</text>
+            <rect class="pill unknown" x="878" y="126" width="182" height="30" rx="15"/><text class="t ink" x="969" y="146" text-anchor="middle">? какие альтернативы</text>
+            <text class="t-xs muted" x="490" y="184">ответы — только из проверенных первоисточников</text>
+
+            <text class="eyebrow" x="20" y="240">РАЗБОР ОТЧЁТОВ ИЗ УРОКА 4.4.2</text>
+            <text class="t-xs muted" x="20" y="258">утверждение</text><text class="t-xs muted" x="480" y="258">что показала проверка источника</text><text class="t-xs muted" x="850" y="258">вывод</text>
+
+            <rect class="box" x="20" y="266" width="400" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="34" y="293">Отчёт A: «62% команд каталога купят ИИ-продукт»</text>
+            <path class="conn" d="M424 288H472" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="box" x="480" y="266" width="340" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="494" y="293">нет автора, даты, выборки и методики</text>
+            <path class="conn" d="M824 288H842" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="pill unknown" x="850" y="273" width="230" height="30" rx="15"/><text class="t ink" x="965" y="293" text-anchor="middle">удалено как неподтверждённое</text>
+
+            <rect class="box" x="20" y="318" width="400" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="34" y="345">Отчёт A: «усилия на подключение меньше на 70%»</text>
+            <path class="conn" d="M424 340H472" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="box" x="480" y="318" width="340" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="494" y="336">история одного клиента продавца,</text><text class="t ink" x="494" y="354">без базы сравнения и доли ручной проверки</text>
+            <path class="conn" d="M824 340H842" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="pill assume" x="850" y="325" width="230" height="30" rx="15"/><text class="t ink" x="965" y="345" text-anchor="middle">слова продавца, не переносится</text>
+
+            <rect class="box" x="20" y="370" width="400" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="34" y="388">Отчёт B: «PIM, EDI и шаблоны решают</text><text class="t ink" x="34" y="406">задачу для большинства компаний»</text>
+            <path class="conn" d="M424 392H472" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="box" x="480" y="370" width="340" height="44" rx="8" style="stroke:var(--line)"/>
+            <text class="t ink" x="494" y="388">38 компаний, 31 — больше 10 000</text><text class="t ink" x="494" y="406">сотрудников и с обязательным EDI</text>
+            <path class="conn" d="M824 392H842" marker-end="url(#arrow-m)" style="stroke:var(--ink)"/>
+            <rect class="pill assume" x="850" y="377" width="230" height="30" rx="15"/><text class="t ink" x="965" y="397" text-anchor="middle">верно только для крупных</text>
+          </g>
+        </svg>
+      </div>
+      <p class="scroll-hint">Схема шире экрана — прокрутите её вбок.</p>
+      <figcaption>Внутренние числа одной компании не говорят, есть ли такая боль у рынка. Ссылка на отчёт — ещё не доказательство: проверяется, кто автор, когда и на какой выборке получен вывод и подходит ли он вашему сегменту.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 5. GOVERNANCE ===================== -->
+  <section class="block c-governance" id="governance" aria-labelledby="h-gov">
+    <h2 id="h-gov"><span class="bar"></span>5. Правила и контроль: где решает человек</h2>
+    <p class="lead">Материал курса — <a href="../05-governance-inputs.md">05-governance-inputs.md</a>. Предварительно — умеренный риск, но только для внутреннего черновика, который проверяет человек. Итоговый уровень риска и права решений определяете вы.</p>
+    <figure>
+      <div class="scroll">
+        <svg class="d w-1100" viewBox="0 0 1100 560" role="img" aria-labelledby="g-t g-d">
+          <title id="g-t">Процесс с точками проверки человеком</title>
+          <desc id="g-d">Пакет поставщика проходит проверку допустимости, LineSheet Loom делает черновик только для чтения. Дальше только люди: специалист проверяет каждую строку, противоречия эскалируются, менеджер каталога решает об импорте, публикация — отдельное решение человека. Сигналы остановки ведут к откату на Structured Intake. Данные делятся на разрешённые, ограниченные, запрещённые и требующие отдельного согласования.</desc>
+          <defs><marker id="arrow-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+          <g class="ink">
+            <text class="eyebrow" x="20" y="24">ПУТЬ СТРОКИ: ОТ ПАКЕТА ДО ПУБЛИКАЦИИ</text>
+            <!-- nodes -->
+            <rect class="box" x="20" y="44" width="150" height="60" rx="10"/><text class="t b" x="95" y="70" text-anchor="middle">Пакет поставщика</text><text class="t-xs muted" x="95" y="88" text-anchor="middle">PDF, XLSX, CSV, письма</text>
+            <rect class="box" x="250" y="44" width="170" height="60" rx="10" style="stroke:var(--economics);stroke-width:2.5"/><text class="t b" x="335" y="70" text-anchor="middle">LineSheet Loom</text><text class="t-xs muted" x="335" y="88" text-anchor="middle">черновик, только чтение</text>
+            <rect class="box" x="500" y="44" width="160" height="60" rx="10"/><text class="t b" x="580" y="70" text-anchor="middle">Проверенные</text><text class="t b" x="580" y="88" text-anchor="middle">строки</text>
+            <rect class="box" x="740" y="44" width="150" height="60" rx="10"/><text class="t b" x="815" y="70" text-anchor="middle">Рабочий</text><text class="t b" x="815" y="88" text-anchor="middle">каталог</text>
+            <rect class="box" x="970" y="44" width="110" height="60" rx="10"/><text class="t b" x="1025" y="79" text-anchor="middle">Публикация</text>
+            <!-- arrows with gates -->
+            <path class="conn" d="M170 74H246" marker-end="url(#arrow-g)"/><circle class="gate" cx="210" cy="74" r="13"/><text class="gate-n" x="210" y="79" text-anchor="middle">1</text>
+            <path class="conn" d="M420 74H496" marker-end="url(#arrow-g)"/><circle class="gate" cx="460" cy="74" r="13"/><text class="gate-n" x="460" y="79" text-anchor="middle">2</text>
+            <path class="conn" d="M660 74H736" marker-end="url(#arrow-g)"/><circle class="gate" cx="700" cy="74" r="13"/><text class="gate-n" x="700" y="79" text-anchor="middle">4</text>
+            <path class="conn" d="M890 74H966" marker-end="url(#arrow-g)"/><circle class="gate" cx="930" cy="74" r="13"/><text class="gate-n" x="930" y="79" text-anchor="middle">5</text>
+            <!-- gate labels -->
+            <text class="t-sm" x="210" y="128" text-anchor="middle">допустимость</text><text class="t-sm" x="210" y="144" text-anchor="middle">входных данных</text><text class="t-xs muted" x="210" y="160" text-anchor="middle">кто — решаете вы</text>
+            <text class="t-sm" x="460" y="128" text-anchor="middle">проверка каждой</text><text class="t-sm" x="460" y="144" text-anchor="middle">строки</text><text class="t-xs muted" x="460" y="160" text-anchor="middle">специалист каталога</text>
+            <text class="t-sm" x="700" y="128" text-anchor="middle">решение</text><text class="t-sm" x="700" y="144" text-anchor="middle">об импорте</text><text class="t-xs muted" x="700" y="160" text-anchor="middle">менеджер каталога</text>
+            <text class="t-sm" x="930" y="128" text-anchor="middle">отдельное решение</text><text class="t-sm" x="930" y="144" text-anchor="middle">человека</text><text class="t-xs muted" x="930" y="160" text-anchor="middle">кто — решаете вы</text>
+            <!-- gate 3 branch -->
+            <path class="conn" d="M580 104V186" marker-end="url(#arrow-g)"/>
+            <rect class="box" x="458" y="190" width="264" height="50" rx="8" style="stroke:var(--governance)"/>
+            <circle class="gate" cx="480" cy="215" r="12"/><text class="gate-n" x="480" y="220" text-anchor="middle">3</text>
+            <text class="t-sm" x="500" y="210">противоречия в цене, упаковке,</text><text class="t-sm" x="500" y="228">MOQ, доступности → эскалация</text>
+            <!-- boundary -->
+            <line class="boundary" x1="440" y1="36" x2="440" y2="112"/>
+            <text class="t-xs b" x="432" y="30" text-anchor="end" style="fill:var(--governance)">← функция</text>
+            <text class="t-xs b" x="448" y="30" style="fill:var(--governance)">дальше только люди →</text>
+
+            <!-- stop / rollback lane -->
+            <text class="eyebrow" x="20" y="290">ЕСЛИ ЧТО-ТО ПОШЛО НЕ ТАК</text>
+            <rect class="box" x="20" y="302" width="320" height="96" rx="10" style="stroke:var(--neg);stroke-width:2"/>
+            <text class="t b" x="36" y="326" style="fill:var(--neg)">Сигнал остановки</text>
+            <text class="t-sm" x="36" y="348">· критическая ошибка · запрещённые данные</text>
+            <text class="t-sm" x="36" y="366">· внешнее действие</text>
+            <text class="t-sm" x="36" y="384">· нет содержательной проверки человеком</text>
+            <path class="conn" d="M340 350H386" marker-end="url(#arrow-g)"/>
+            <rect class="box" x="390" y="302" width="330" height="96" rx="10"/>
+            <text class="t b" x="406" y="326">Откат</text>
+            <text class="t-sm" x="406" y="348">· отключить LineSheet Loom</text>
+            <text class="t-sm" x="406" y="366">· изолировать спорные черновики</text>
+            <text class="t-sm" x="406" y="384">· вернуться к Structured Intake, перепроверить</text>
+            <rect class="box" x="760" y="302" width="320" height="96" rx="10" style="stroke:var(--pos);stroke-width:2"/>
+            <text class="t b" x="776" y="326">Перезапуск и масштабирование</text>
+            <text class="t-sm" x="776" y="348">· перезапуск: причина устранена, новая</text>
+            <text class="t-sm" x="776" y="366">  выборка, разрешение владельцев риска и данных</text>
+            <text class="t-sm" x="776" y="384">· масштаб: проверка ниже 3,96 мин, без ошибок</text>
+
+            <!-- data categories -->
+            <text class="eyebrow" x="20" y="436">КАТЕГОРИИ ДАННЫХ</text>
+            <rect class="cat-ok" x="20" y="448" width="252" height="84" rx="10"/>
+            <text class="t b" x="36" y="472" style="fill:var(--pos)">Разрешено</text>
+            <text class="t-sm" x="36" y="494">товарные характеристики, цены,</text><text class="t-sm" x="36" y="512">условия поставки — в минимуме</text>
+            <rect class="cat-lim" x="286" y="448" width="252" height="84" rx="10"/>
+            <text class="t b" x="302" y="472" style="fill:var(--warn)">Ограничено</text>
+            <text class="t-sm" x="302" y="494">контакты, непубличные цены,</text><text class="t-sm" x="302" y="512">договоры, эмбарго, NDA</text>
+            <rect class="cat-no" x="552" y="448" width="252" height="84" rx="10"/>
+            <text class="t b" x="568" y="472" style="fill:var(--neg)">Запрещено</text>
+            <text class="t-sm" x="568" y="494">реквизиты, учётные данные,</text><text class="t-sm" x="568" y="512">документы, лишние персданные</text>
+            <rect class="cat-sep" x="818" y="448" width="262" height="84" rx="10"/>
+            <text class="t b" x="834" y="472">Отдельное согласование</text>
+            <text class="t-sm" x="834" y="494">новый провайдер, юрисдикция,</text><text class="t-sm" x="834" y="512">материалы под NDA, срок хранения</text>
+            <text class="t-xs muted" x="20" y="552">Владелец данных — распорядитель данных поставщиков · владелец риска — руководитель по приватности и безопасности · владелец инцидентов — продуктовые операции</text>
+          </g>
+        </svg>
+      </div>
+      <p class="scroll-hint">Схема шире экрана — прокрутите её вбок.</p>
+      <figcaption>LineSheet Loom только готовит черновик. Всё, что меняет каталог, решают люди — в пяти точках проверки. Для точек 1, 3 и 5 кейс не называет ответственного: права решений вы распределяете сами, только между ролями из <code>05-governance-inputs.md</code>.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===================== 6. DECISION ===================== -->
+  <section class="block" id="decision" aria-labelledby="h-dec">
+    <h2 id="h-dec"><span class="bar"></span>6. Решение: три равноправных исхода</h2>
+    <p class="lead">Определения — из <a href="../01-decision-evidence-contract.md">01-decision-evidence-contract.md</a>. Итог вы выбираете сами и записываете в <code>decision-summary.md</code> по шаблону <a href="../06-decision-summary.template.md">06-decision-summary.template.md</a>.</p>
+    <figure>
+      <div class="scroll">
+        <svg class="d w-1100" viewBox="0 0 1100 320" role="img" aria-labelledby="d-t d-d">
+          <title id="d-t">Три исхода решения</title>
+          <desc id="d-d">Из четырёх групп доказательств ведут три равноправных исхода. Продолжаем: порог качества достигнут, проверка ниже точки безубыточности, правила и контроль согласованы — ограниченный внутренний пилот. Пересматриваем: Structured Intake для типового потока, LineSheet Loom только для сложных пакетов или нужны новые данные и проверка. Останавливаем: Structured Intake достаточно по качеству и экономике, либо безопасная граница не подтверждена. Любой исход ведёт к следующей проверке.</desc>
+          <defs><marker id="arrow-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+          <rect class="box" x="20" y="110" width="210" height="100" rx="10"/>
+          <text class="t b" x="125" y="140" text-anchor="middle">Четыре нити</text>
+          <rect x="42" y="156" width="36" height="6" rx="3" class="w-q"/><rect x="84" y="156" width="36" height="6" rx="3" class="w-e"/>
+          <rect x="126" y="156" width="36" height="6" rx="3" class="w-m"/><rect x="168" y="156" width="36" height="6" rx="3" class="w-g"/>
+          <text class="t-sm muted" x="125" y="184" text-anchor="middle">качество · экономика</text><text class="t-sm muted" x="125" y="200" text-anchor="middle">рынок · правила и контроль</text>
+
+          <path class="conn" d="M230 160C265 160 265 58 296 58" marker-end="url(#arrow-d)"/>
+          <path class="conn" d="M230 160H296" marker-end="url(#arrow-d)"/>
+          <path class="conn" d="M230 160C265 160 265 262 296 262" marker-end="url(#arrow-d)"/>
+
+          <rect class="box" x="300" y="20" width="540" height="76" rx="10"/>
+          <text class="t b" x="318" y="44">продолжаем</text>
+          <text class="t-sm" x="318" y="64">порог качества достигнут · проверка ниже точки безубыточности ·</text>
+          <text class="t-sm" x="318" y="82">правила и контроль согласованы → ограниченный внутренний пилот</text>
+          <rect class="box" x="300" y="122" width="540" height="76" rx="10"/>
+          <text class="t b" x="318" y="146">пересматриваем</text>
+          <text class="t-sm" x="318" y="166">Structured Intake — типовой поток; LineSheet Loom — только сложные</text>
+          <text class="t-sm" x="318" y="184">пакеты, или нужны новые данные и проверка</text>
+          <rect class="box" x="300" y="224" width="540" height="76" rx="10"/>
+          <text class="t b" x="318" y="248">останавливаем</text>
+          <text class="t-sm" x="318" y="268">Structured Intake достаточно по качеству и экономике —</text>
+          <text class="t-sm" x="318" y="286">или безопасная граница LineSheet Loom не подтверждена</text>
+
+          <path class="conn" d="M840 58C875 58 875 160 906 160" marker-end="url(#arrow-d)"/>
+          <path class="conn" d="M840 160H906" marker-end="url(#arrow-d)"/>
+          <path class="conn" d="M840 262C875 262 875 160 906 160" marker-end="url(#arrow-d)"/>
+          <rect class="box" x="910" y="100" width="170" height="120" rx="10"/>
+          <text class="t b" x="926" y="128">Следующая</text><text class="t b" x="926" y="146">проверка</text>
+          <text class="t-sm muted" x="926" y="172">слабое допущение</text><text class="t-sm muted" x="926" y="190">и что изменит</text><text class="t-sm muted" x="926" y="208">решение</text>
+        </svg>
+      </div>
+      <p class="scroll-hint">Схема шире экрана — прокрутите её вбок.</p>
+      <figcaption>Правильного исхода заранее нет. Оценивается не совпадение с чьим-то вердиктом, а то, насколько решение опирается на доказательства, прослеживается до источников и не противоречит само себе. Любой исход называет, что проверить дальше и что может его изменить.</figcaption>
+    </figure>
+  </section>
+
+  <ul class="files" aria-label="Файлы пакета">
+    <li><a href="../00-case-brief.md">Кейс <span class="f">00-case-brief.md</span></a></li>
+    <li><a href="../01-decision-evidence-contract.md">Исходы и правила <span class="f">01-decision-evidence-contract.md</span></a></li>
+    <li><a href="../02-quality-evidence.md">Качество <span class="f">02-quality-evidence.md</span></a></li>
+    <li><a href="../03-economics-course-reference.md">Экономика <span class="f">03-economics-course-reference.md</span></a></li>
+    <li><a href="../04-market-gtm-recovery-context.md">Рынок <span class="f">04-market-gtm-recovery-context.md</span></a></li>
+    <li><a href="../05-governance-inputs.md">Правила и контроль <span class="f">05-governance-inputs.md</span></a></li>
+    <li><a href="../06-decision-summary.template.md">Шаблон решения <span class="f">06-decision-summary.template.md</span></a></li>
+  </ul>
+
+  <section class="text-version" id="text-version" aria-labelledby="tv-title">
+    <details>
+      <summary id="tv-title">Текстовая версия всех схем</summary>
+      <h3>1. Общая карта</h3>
+      <p>Вопрос: даёт ли LineSheet Loom достаточное преимущество на неоднородном «длинном хвосте» поставщиков относительно Structured Intake, чтобы запускать ограниченный внутренний пилот? Четыре нити — качество, экономика, рынок, правила и контроль — сходятся в решение: <code>продолжаем</code>, <code>пересматриваем</code> или <code>останавливаем</code>. Решение отвечает на вопрос и оставляет открытым, что проверить дальше.</p>
+      <h3>2. Качество</h3>
+      <ul><li>Быстрые проверки S1–S2: 2 из 2.</li><li>Открытая выборка D1–D4 до изменения: 1 из 4, одна критическая ошибка (D4 — банковские реквизиты в комментарии); D2 угадала цену за коробку, D3 выбрала $20 при противоречии $18 и $20.</li><li>После одного изменения правил: 4 из 4, 0 критических — но это те же кейсы, не независимая оценка.</li><li>Закрытая выборка H1–H8 без настройки: 7 из 8 (H6 — категория вместо вопроса, некритично), формат 8 из 8, 0 критических. Порог «не меньше 7 из 8» достигнут.</li></ul>
+      <h3>3. Экономика</h3>
+      <ul><li>Постоянные затраты: $85 000 у Structured Intake, $180 000 у LineSheet Loom.</li><li>Ручная проверка: $198 000 против $115 200; уточнения у поставщика: $64 800 против $28 800; переделка: $17 280 против $8 640; контрольная проверка: $14 400 против $19 200; модель: только у LineSheet Loom, $159,39.</li><li>TCO за 12 месяцев: $379 480 против $351 999,39; чистый эффект +$27 480,61, ROI 7,81%.</li><li>Чувствительность: при 3,2 мин проверки эффект +$27 480,61; при 3,96 мин — около нуля; при 4,5 мин −$19 319,39, ROI −4,84%. Минута проверки на всём объёме — $36 000. Время 3,2 мин — учебное предположение.</li></ul>
+      <h3>4. Рынок</h3>
+      <ul><li>Факты кейса (420 поставщиков, 60 000 строк, 9,5 мин, 7 из 8, TCO и ROI) не доказывают рыночный спрос.</li><li>Сегмент — гипотеза: США, оптовые маркетплейсы и компании, 200–1 000 поставщиков, от 50 000 строк в год. Есть ли боль, готов ли сегмент платить и какие альтернативы он использует — неизвестно.</li><li>Отчёт A: «62% купят ИИ-продукт» — нет автора, даты, выборки и методики, удалено. «Усилия меньше на 70%» — история одного клиента продавца, не переносится. Отчёт B: «PIM, EDI и шаблоны решают задачу для большинства» — 38 компаний, 31 крупнее 10 000 сотрудников и с EDI, верно только для крупных.</li></ul>
+      <h3>5. Правила и контроль</h3>
+      <ul><li>Путь строки: пакет поставщика → (1) допустимость входных данных → LineSheet Loom, черновик только для чтения → (2) проверка каждой строки, специалист каталога → (3) противоречия в цене, упаковке, MOQ, доступности — эскалация → (4) решение об импорте, менеджер каталога → рабочий каталог → (5) публикация — отдельное решение человека. После черновика — только люди.</li><li>Сигналы остановки: критическая ошибка, запрещённые данные, внешнее действие, нет содержательной проверки. Откат: отключить LineSheet Loom, изолировать черновики, вернуться к Structured Intake, перепроверить пакеты.</li><li>Перезапуск: причина устранена, новая независимая выборка, разрешение владельцев риска и данных. Масштабирование: без критических ошибок, подтверждённая проверка ниже 3,96 мин, владельцы, журналирование, откат, нет неразрешённых данных.</li><li>Данные: разрешено — товарные характеристики, цены, условия в минимуме; ограничено — контакты, непубличные цены, договоры, эмбарго, NDA; запрещено — реквизиты, учётные данные, документы личности, лишние персональные данные; отдельное согласование — новый провайдер, другая юрисдикция, материалы под NDA, срок хранения.</li></ul>
+      <h3>6. Решение</h3>
+      <ul><li><code>продолжаем</code> — порог качества достигнут, время проверки ниже точки безубыточности, правила и контроль согласованы: ограниченный внутренний пилот.</li><li><code>пересматриваем</code> — Structured Intake обрабатывает типовой поток, LineSheet Loom ограничивается сложными пакетами или требует новых данных и проверки.</li><li><code>останавливаем</code> — Structured Intake даёт достаточное качество и экономику, либо безопасная граница LineSheet Loom не подтверждена.</li><li>Три исхода равноправны. Любой называет следующую проверку и то, что может изменить решение.</li></ul>
+    </details>
+  </section>
+
+  <footer>Заполненный пакет решения LineSheet Loom, задачник 4.5.2. Открывается двойным кликом, без интернета и без установки программ. Данные кейса синтетические. Карта ничего не принимает и не сохраняет.</footer>
+</div>
+</body>
+</html>

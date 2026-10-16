@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#172b2b">
+  <title>MVP-смена · 3D</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23172b2b'/%3E%3Cpath d='M8 23V9h16v5H13v9z' fill='%23edbb7a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main id="app">
+    <div id="world"><canvas id="office-canvas" aria-label="Трёхмерный офис. WASD или стрелки — идти, E — разговор." tabindex="0"></canvas></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <div id="hud"></div><div id="scene"></div><div id="mission"></div><div id="modal"></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <noscript>Для игры включите JavaScript в браузере.</noscript>
+  <script src="app.js"></script>
+</body>
+</html>
